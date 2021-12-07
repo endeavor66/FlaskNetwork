@@ -1,0 +1,22 @@
+{
+  "case1": {
+    "router": "RouterA",
+    "input": "show ip route",
+    "output": "Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area\n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP\n       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area\n       * - candidate default, U - per-user static route, o - ODR\n       P - periodic downloaded static route\n\nGateway of last resort is not set\n\n     172.16.0.0/24 is subnetted, 3 subnets\nC       172.16.1.0 is directly connected, Loopback0\nC       172.16.2.0 is directly connected, Loopback1\nC       172.16.3.0 is directly connected, Loopback2\nC    192.168.1.0/24 is directly connected, Serial0/0/0\nO IA 192.168.2.0/24 [110/128] via 192.168.1.1, 00:01:43, Serial0/0/0"
+  },
+  "case2": {
+    "router": "RouterB",
+    "input": "show ip route ospf",
+    "output": "     172.16.0.0/32 is subnetted, 3 subnets\nO IA    172.16.1.1 [110/65] via 192.168.1.2, 00:05:03, Serial0/0/0\nO IA    172.16.2.1 [110/65] via 192.168.1.2, 00:05:03, Serial0/0/0\nO IA    172.16.3.1 [110/65] via 192.168.1.2, 00:05:03, Serial0/0/0"
+  },
+  "case3": {
+    "router": "RouterC",
+    "input": "show ip route",
+    "output": "Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area\n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP\n       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area\n       * - candidate default, U - per-user static route, o - ODR\n       P - periodic downloaded static route\n\nGateway of last resort is not set\n\n     172.16.0.0/32 is subnetted, 3 subnets\nO IA    172.16.1.1 [110/129] via 192.168.2.1, 00:05:00, Serial0/0/0\nO IA    172.16.2.1 [110/129] via 192.168.2.1, 00:05:00, Serial0/0/0\nO IA    172.16.3.1 [110/129] via 192.168.2.1, 00:05:00, Serial0/0/0\nO IA 192.168.1.0/24 [110/128] via 192.168.2.1, 00:05:00, Serial0/0/0\nC    192.168.2.0/24 is directly connected, Serial0/0/0"
+  },
+  "case4": {
+    "router": "RouterC",
+    "input": "ping 172.16.1.1",
+    "output": "\nType escape sequence to abort.\nSending 5, 100-byte ICMP Echos to 172.16.1.1, timeout is 2 seconds:\n!!!!!\nSuccess rate is 100 percent (5/5), round-trip min/avg/max = 48/59/64 ms"
+  }
+}

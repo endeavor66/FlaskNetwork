@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script language="JavaScript" src="../static/jquery.js"></script>
+    <script language="JavaScript" src="../static/go-debug.js"></script>
+</head>
+<body>
+
+    <div id="myDiagramDiv3" style="width:400px; height:150px; background-color: #DAE4E4;"></div>
+    <div id="diagramEventsMsg" style="width:400px; height:150px; background-color: #A1F514; margin-top: 50px">123</div>
+
+<script>
+    var GO = go.GraphObject.make;
+    var myDiagram =
+        GO(go.Diagram, "myDiagramDiv3",
+          {
+            "undoManager.isEnabled": true // enable Ctrl-Z to undo and Ctrl-Y to redo
+        });
+    // define a simple Node template
+    myDiagram.nodeTemplate =
+        GO(go.Node, "Horizontal",
+          // the entire node will have a light-blue background
+          { background: "#44CCFF" },
+          GO(go.Picture,
+            // Pictures should normally have an explicit width and height.
+            // This picture has a red background, only visible when there is no source set
+            // or when the image is partially transparent.
+            { margin: 10, width: 50, height: 50, background: "red" },
+            // Picture.source is data bound to the "source" attribute of the model data
+            new go.Binding("source")),
+          GO(go.TextBlock,
+            "Default Text",  // the initial value for TextBlock.text
+            // some room around the text, a larger font, and a white stroke:
+            { margin: 12, stroke: "white", font: "bold 16px sans-serif" },
+            // TextBlock.text is data bound to the "name" attribute of the model data
+            new go.Binding("text", "name"))
+         );
+    var model = GO(go.GraphLinksModel);
+    model.nodeDataArray =
+        [ // note that each node data object holds whatever properties it needs;
+        // for this app we add the "name" and "source" properties
+        { key: "A", name: "Don Meow", source: "https://gojs.net.cn/images/learn/cat1.png" },
+        { key: "B", name: "Copricat", source: "https://gojs.net.cn/images/learn/cat2.png" },
+        { key: "C", name: "Demeter",  source: "https://gojs.net.cn/images/learn/cat3.png" },
+        { key: "D"/* Empty node data */  }
+    ];
+    model.linkDataArray = [
+        { from: "A", to: "B", ip: "1.1.1.1", net: "s0/0/0" },
+        { from: "B", to: "C", ip: "1.1.1.1", net: "s0/0/1" },
+        { from: "C", to: "D", ip: "1.1.1.1", net: "s0/0/2" }
+    ]
+    myDiagram.model = model;
+
+
+    function showMessage(s){
+        document.getElementById("diagramEventsMsg").innerHTML = s
+    }
+
+    myDiagram.addDiagramListener("ObjectSingleClicked",
+        function (e){
+            console.log("clickEvent triggered")
+            var part = e.subject.part;
+            //if (!(part instanceof go.Link)){
+            console.log(part.data)
+            showMessage(part.data.key)
+        }
+    )
+
+</script>
+
+</body>
+</html>

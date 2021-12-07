@@ -1,0 +1,22 @@
+{
+  "case1": {
+    "router": "RouterA",
+    "input": "show ip route",
+    "output": "Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area\n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP\n       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area\n       * - candidate default, U - per-user static route, o - ODR\n       P - periodic downloaded static route\n\nGateway of last resort is not set\n\n     1.0.0.0/24 is subnetted, 1 subnets\nC       1.1.1.0 is directly connected, Loopback0\n     2.0.0.0/24 is subnetted, 1 subnets\nS       2.2.2.0 is directly connected, Serial0/0/0\n     3.0.0.0/24 is subnetted, 1 subnets\nS       3.3.3.0 [1/0] via 192.168.12.2\nC    192.168.12.0/24 is directly connected, Serial0/0/0"
+  },
+  "case2": {
+    "router": "RouterA",
+    "input": "ping 3.3.3.3 source 1.1.1.1",
+    "output": "Type escape sequence to abort.\nSending 5, 100-byte ICMP Echos to 3.3.3.3, timeout is 2 seconds:\nPacket sent with a source address of 1.1.1.1\n!!!!!\nSuccess rate is 100 percent (5/5), round-trip min/avg/max = 61/61/64 ms"
+  },
+  "case3": {
+    "router": "RouterB",
+    "input": "show ip route",
+    "output": "Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area\n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP\n       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area\n       * - candidate default, U - per-user static route, o - ODR\n       P - periodic downloaded static route\n\nGateway of last resort is not set\n\n     1.0.0.0/24 is subnetted, 1 subnets\nS       1.1.1.0 is directly connected, Serial0/0/0\n     2.0.0.0/24 is subnetted, 1 subnets\nC       2.2.2.0 is directly connected, Loopback0\n     3.0.0.0/24 is subnetted, 1 subnets\nS       3.3.3.0 is directly connected, Serial0/0/1\nC    192.168.12.0/24 is directly connected, Serial0/0/0\nC    192.168.23.0/24 is directly connected, Serial0/0/1"
+  },
+  "case4": {
+    "router": "RouterC",
+    "input": "show ip route",
+    "output": "Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area\n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP\n       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area\n       * - candidate default, U - per-user static route, o - ODR\n       P - periodic downloaded static route\n\nGateway of last resort is not set\n\n     1.0.0.0/24 is subnetted, 1 subnets\nS       1.1.1.0 is directly connected, Serial0/0/1\n     2.0.0.0/24 is subnetted, 1 subnets\nS       2.2.2.0 is directly connected, Serial0/0/1\n     3.0.0.0/24 is subnetted, 1 subnets\nC       3.3.3.0 is directly connected, Loopback0\nC    192.168.23.0/24 is directly connected, Serial0/0/1"
+  }
+}
