@@ -243,15 +243,19 @@ def buildTopology(tc_dic, content):
 '''
 def updatePortInfo(tc, portInfo):
     portName = portInfo['portName']
-    portIP, netmask = getPortIpAndNetmask(portInfo['portIPNet'])
+    portIP, netmask = getPortIpAndNetmask(portInfo['portIP'])
     status = portInfo['status']
+    net = cal_portNetIp(portInfo['portIP'])
+    portInfo['portNet'] = net
 
     tc.exec_cmd('conf t')
     if status == 'down':
-        tc.exec_cmd('no int %s' % portName)
+        tc.exec_cmd('int %s' % portName)
+        tc.exec_cmd('shutdown')
     else:
-        tc.setPortIP(portName, portIP, netmask)
-    return True
+        tc.setPortIp(portName, portIP, netmask)
+
+    return portInfo
 
 '''
 功能：一键清空当前配置

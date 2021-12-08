@@ -120,7 +120,7 @@ def send():
     print(routerInfo)
     print(connection)
     # 获取每个路由器的Telnet客户端
-    # getRouterTC(tc_dic, conf_content)
+    getRouterTC(tc_dic, conf_content)
     # 根据conf_content内容搭建网络拓扑
     # buildTopology(tc_dic, conf_content)
     return jsonify({"routerInfo": routerInfo, "connection": connection})
@@ -161,11 +161,11 @@ def topologyTest():
 @app.route("/update", methods=('GET', 'POST'))
 def updatePort():
     # portInfo = {'router': 'RouterA', 'portName': 's0/0/0', 'portIPNet': '172.16.1.1/24', 'status': 'up'}
-    portInfo = content = request.form
+    portInfo = dict(request.form)
     router = portInfo['router']
     tc = tc_dic[router]
-    flag = updatePortInfo(tc, portInfo)
-    return flag
+    newPortInfo = updatePortInfo(tc, portInfo)
+    return newPortInfo
 
 '''
 功能：一键清空当前配置

@@ -10,6 +10,7 @@
 
     <div id="myDiagramDiv3" style="width:400px; height:150px; background-color: #DAE4E4;"></div>
     <div id="diagramEventsMsg" style="width:400px; height:150px; background-color: #A1F514; margin-top: 50px">123</div>
+    <button id="update" onclick="updateA()">updateA</button>
 
 <script>
     var GO = go.GraphObject.make;
@@ -41,9 +42,9 @@
     model.nodeDataArray =
         [ // note that each node data object holds whatever properties it needs;
         // for this app we add the "name" and "source" properties
-        { key: "A", name: "Don Meow", source: "https://gojs.net.cn/images/learn/cat1.png" },
-        { key: "B", name: "Copricat", source: "https://gojs.net.cn/images/learn/cat2.png" },
-        { key: "C", name: "Demeter",  source: "https://gojs.net.cn/images/learn/cat3.png" },
+        { key: "A", name: "Don Meow", port: [{'name': 's0/0/0', 'status': 'up'}, {'name': 's0/0/1', 'status': 'down'}], source: "https://gojs.net.cn/images/learn/cat1.png" },
+        { key: "B", name: "Copricat", port: [{'name': 's0/0/0', 'status': 'up'}, {'name': 's0/0/2', 'status': 'down'}], source: "https://gojs.net.cn/images/learn/cat2.png" },
+        { key: "C", name: "Demeter",  port: [{'name': 's0/0/0', 'status': 'up'}, {'name': 's0/0/3', 'status': 'down'}], source: "https://gojs.net.cn/images/learn/cat3.png" },
         { key: "D"/* Empty node data */  }
     ];
     model.linkDataArray = [
@@ -67,6 +68,22 @@
             showMessage(part.data.key)
         }
     )
+
+    function updateA(){
+        var adata = myDiagram.model.findNodeDataForKey("A");
+        console.log(adata);
+        console.log(adata.port);
+        for(let i = 0; i < adata.port.length; i++){
+            console.log(adata.port[i].name)
+            if(adata.port[i].name == 's0/0/1'){
+                adata.port[i].name = 's0/0/4';
+                adata.port[i].status = 'up';
+            }
+        }
+        myDiagram.model.setDataProperty(adata, "name", "D");
+        var adata_new = myDiagram.model.findNodeDataForKey("A");
+        console.log(adata_new);
+    }
 
 </script>
 

@@ -2,6 +2,7 @@ import telnetlib
 import time
 
 
+
 class TelnetClient:
     def __init__(self):
         self.tn = telnetlib.Telnet()
@@ -35,7 +36,7 @@ class TelnetClient:
             return False
         print('登陆成功')
         # 持久化连接终端
-        self.tn.interact()
+        # self.tn.interact()
         return True
 
     def logout(self):
@@ -60,6 +61,6 @@ class TelnetClient:
 
 if __name__ == '__main__':
     tc = TelnetClient()
-    tc.login('172.16.0.4', '', 'CISCO')
+    tc.login('172.16.0.2', '', 'CISCO')
     tc.exec_cmd('show running-config')
     tc.logout()
