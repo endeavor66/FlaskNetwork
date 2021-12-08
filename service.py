@@ -190,8 +190,8 @@ def getRouterTC(tc_dic, content):
         ip = value['ip']
         password = value['password']
         # 登录路由器
-        tc = TC()
-        tc.login(ip, '', password)
+        tc = TC(ip, password)
+        tc.login()
         tc_dic[key] = tc
 
 '''
