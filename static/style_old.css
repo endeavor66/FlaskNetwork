@@ -1,0 +1,43 @@
+#div1 {
+    width: 1700px;
+    height: 1000px;
+    border: 1px solid red;
+}
+
+#div2, #div3, #div4 {
+    border: 1px solid red;
+    background-color: aqua;
+    /* display: inline-block; */
+    /*display: inline-block;*/
+    float: left;
+    width: 33%;
+    height: 98%;
+}
+
+/* div1中的组件样式 */
+#file, #upload{
+    margin-bottom: 5px;
+}
+
+#fileContent {
+    width: 98%;
+    height: 93%;
+}
+
+/* div1中的组件样式 */
+
+/* div3中的组件样式 */
+#divDetailInfo{
+    display: block;
+}
+
+#detailInfo {
+    width: 98%;
+    height: 300px;
+}
+/* div3中的组件样式 */
+
+
+/* 模态框样式 */
+/* The Modal (background) */
+
