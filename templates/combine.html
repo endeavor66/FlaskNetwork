@@ -144,7 +144,7 @@
         </div>
     </div>
 
-    <div id="myModal" class="modal">
+    <div id="myModal" class="modal" style="position: absolute;z-index:100;">
         <!-- Modal content -->
         <div class="modal-content">
             <div class="modal-header">
@@ -441,10 +441,14 @@
         console.log(content)
         $.ajax({
             type: "POST",
-            url: "/test",
+            url: "/topologyTest",
             data: {content: content},
-            success: function () {
-                console.log('success')
+            success: function (data) {
+                var res = ""
+                for(let key in data){
+                    res += key + ": " + data[key] + "\n";
+                }
+                alert(res);
             },
             error: function () {
                 alert("error")

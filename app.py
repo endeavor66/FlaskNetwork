@@ -146,12 +146,12 @@ def execute():
 接受：测试文件内容
 返回：拓扑各个case校验结果
 '''
-@app.route("/test", methods=('GET', 'POST'))
+@app.route("/topologyTest", methods=('GET', 'POST'))
 def topologyTest():
     content = request.form['content']
-    verifyTopology(tc_dic, content)
-    print(content)
-    return 'success'
+    # res = verifyTopology(tc_dic, content)
+    res = {'case1': 'pass', 'case2': 'pass','case3': 'fail','case4': 'pass'}
+    return res
 
 '''
 功能：更新路由端口信息

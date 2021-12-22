@@ -302,6 +302,7 @@ def clearConfiguration(tc_dic, content):
 输出：用例执行结果
 '''
 def verifyTopology(tc_dic, content):
+    res = {}
     caseInfo = json.loads(content)
     for key, value in caseInfo.items():
         router = value['router']
@@ -314,8 +315,11 @@ def verifyTopology(tc_dic, content):
         real_output = tc.exec_cmd(input)
         if exp_output == real_output:
             print(router, key, ' pass!')
+            res[key] = 'pass'
         else:
             print(router, key, ' fail!')
+            res[key] = 'fail'
+    return res
 
 # filePath = 'static/conf.yml'
 # with open(filePath, 'r') as f:
