@@ -200,7 +200,6 @@
     myDiagram.linkTemplate =
         GO(go.Link,
           GO(go.Shape),
-          GO(go.Shape, { toArrow: "Standard" }),
           GO(go.TextBlock, { segmentIndex: 0, segmentOffset: new go.Point(NaN, NaN),
                            segmentOrientation: go.Link.OrientUpright }, new go.Binding("text", "fromPort")),
           GO(go.TextBlock, { segmentIndex: -1, segmentOffset: new go.Point(NaN, NaN),
@@ -421,7 +420,17 @@
                     let info = data.routerInfo[i];
                     let name = info.name;
                     let ports = info.ports;
-                    newData = {key: name, name: name, ports: ports, source: "../static/router.png"}
+                    let x = 0;
+                    let y = 0;
+                    if(i == 1) {
+                        x = 400;
+                        y = 0;
+                    }
+                    if(i == 2){
+                        x = 400;
+                        y = 400;
+                    }
+                    newData = {key: name, name: name, ports: ports, source: "../static/router.png", loc: x+" "+y}
                     myDiagram.model.addNodeData(newData)
                 }
 
