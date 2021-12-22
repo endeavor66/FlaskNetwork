@@ -197,6 +197,15 @@
                 // TextBlock.text is data bound to the "name" attribute of the model data
                 new go.Binding("text", "name"))
         );
+    myDiagram.linkTemplate =
+        GO(go.Link,
+          GO(go.Shape),
+          GO(go.Shape, { toArrow: "Standard" }),
+          GO(go.TextBlock, { segmentIndex: 0, segmentOffset: new go.Point(NaN, NaN),
+                           segmentOrientation: go.Link.OrientUpright }, new go.Binding("text", "fromPort")),
+          GO(go.TextBlock, { segmentIndex: -1, segmentOffset: new go.Point(NaN, NaN),
+                           segmentOrientation: go.Link.OrientUpright }, new go.Binding("text", "toPort"))
+         );
     var model = GO(go.GraphLinksModel);
     model.nodeDataArray = [
         //{key: "RouterA", name: "RouterA", ports: [], source: "../static/router.png" },
@@ -421,11 +430,15 @@
                     let info = data.connection[i];
                     let fromInfo = info["from"]
                     let toInfo = info["to"]
+                    let fromPort = fromInfo["port"]
+                    let toPort = toInfo["port"]
                     myDiagram.model.addLinkData({
                         "from": fromInfo["name"],
                         "to": toInfo["name"],
                         "fromInfo": fromInfo,
-                        "toInfo": toInfo
+                        "toInfo": toInfo,
+                        "fromPort": fromPort,
+                        "toPort": toPort
                     });
                 }
             },
