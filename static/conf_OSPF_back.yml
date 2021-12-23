@@ -3,9 +3,9 @@ RouterA:
   password: CISCO
   port:
     - s0/0/0: 192.168.1.2/24
-    - Lo0: 172.16.1.1/24
-    - Lo1: 172.16.2.1/24
-    - Lo2: 172.16.3.1/24
+    - lo0: 172.16.1.1/24
+    - lo1: 172.16.2.1/24
+    - lo2: 172.16.3.1/24
   command:
     - router ospf 1
     - network 192.168.1.0 0.0.0.255 area 0
@@ -22,11 +22,11 @@ RouterB:
   password: CISCO
   port:
     - s0/0/0: 192.168.1.1/24
-    - f0/1: 192.168.4.1/24
+    - s0/0/1: 192.168.2.1/24
   command:
     - router ospf 1
     - network 192.168.1.0 0.0.0.255 area 0
-    - network 192.168.4.0 0.0.0.255 area 51
+    - network 192.168.2.0 0.0.0.255 area 51
   ping: 192.168.1.2,192.168.2.2
   show: sh ip route
   showtest: test
@@ -35,11 +35,10 @@ RouterC:
   ip: 172.16.0.3
   password: CISCO
   port:
-    - f0/1: 192.168.4.2/24
-    - Lo0: 172.24.2.1/24
+    - s0/0/1: 192.168.2.2/24
   command:
     - router ospf 1
-    - network 192.168.4.0 0.0.0.255 area 51
+    - network 192.168.2.0 0.0.0.255 area 51
   ping:
     - 192.168.1.2
     - 192.168.1.1
