@@ -5,6 +5,35 @@
     <title>Title</title>
     <link rel="stylesheet" href="../static/style.css" type="text/css">
     <style>
+        .input-text {
+            width: 150px;
+            height: 30px;
+            border: 1px solid #139be1;
+            border-radius: 5px;
+            color: blue;
+            font-size: 15px;
+            font-weight: bold;
+            background-color: #faf1d8;
+            text-indent: 10px;
+        }
+
+        .btn {
+            width: 100px;
+            padding: 8px;
+            background-color: #428bca;
+            border-color: #357ebd;
+            color: #fff;
+            -moz-border-radius: 10px;
+            -webkit-border-radius: 10px;
+            border-radius: 10px; /* future proofing */
+            -khtml-border-radius: 10px; /* for old Konqueror browsers */
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid transparent;
+            font-weight: 500;
+            font-size: 75%
+        }
+
         h1 {
             text-align: center;
         }
@@ -55,10 +84,11 @@
         }
 
         th, td {
-            height: 25px;
-            line-height: 25px;
+            height: 40px;
+            line-height: 30px;
             text-align: center;
             border: 1px solid #ccc;
+            font-size: 125%;
         }
 
         th {
@@ -102,18 +132,19 @@
                 <div id="divFile" class="part">
                     <form id="form" method="post">
                         <input id="file" type="file" name="file">
-                        <input id="upload" type="button" onclick="send()" value="提交配置文件">
+                        <input id="upload" type="button" onclick="send()" class="btn" value="提交配置文件">
                     </form>
-                    <input id="clear" type="button" onclick="clearConf()" value="清空">
-                    <input id="save" type="button" onclick="saveConf()" value="保存">
-                    <input id="test" type="button" onclick="sendTestFile()" value="提交校验文件">
+                    <input id="clear" type="button" class="btn" onclick="clearConf()" value="清空">
+                    <input id="save" type="button" class="btn" onclick="saveConf()" value="保存">
+                    <input id="test" type="button" class="btn" onclick="sendTestFile()" value="提交校验文件">
+                    <br><br>
                     <textarea id="fileContent"></textarea>
                 </div>
             </div>
             <div class="content2" id="myContent2">
                 <div id="divRouterInfo">
                     <h1 id="routerID">Router</h1>
-                    <table id="routerInfo" border="1">
+                    <table id="routerInfo" border="1" cellspacing="10">
                         <tr>
                             <th>PORT</th>
                             <th>IP</th>
@@ -134,8 +165,8 @@
             </div>
             <div class="content3" id="myContent3">
                 <div id="divInteract">
-                    <input id="cmd" name="command" style="width: 400px">
-                    <input id="execute" type="button" onclick="executeCMD()" value="执行">
+                    <input id="cmd" name="command" style="width: 400px" class="input-text">
+                    <input id="execute" type="button" class="btn" onclick="executeCMD()" value="执行">
                     <br>
                     <br>
                     <textarea id="detailInfo"></textarea>
@@ -152,15 +183,17 @@
                 <h2 id="RouterName">RouterA</h2>
             </div>
             <div class="modal-body">
-                <span>portName:</span><input id="portName" type="text"><br>
-                <span>portIP:</span><input id="portIP" type="text"><br>
-                <span>portStatus:</span>
-                <select id="portStatus">
+                <span class="modal-label">portName:</span><input id="portName" type="text" class="input-text" disabled="disabled"><br><br>
+                <span class="modal-label">portIP:</span><input id="portIP" class="input-text" type="text"><br><br>
+                <span class="modal-label">portStatus:</span>
+                <select id="portStatus" class="input-text">
                     <option>up</option>
                     <option>down</option>
-                </select><br>
-                <button id="okBtn" onclick="okFunction()">确认</button>
-                <button id="noBtn" onclick="noFunction()">取消</button>
+                </select><br><br>
+                <div align="center">
+                    <button id="okBtn" class="btn" onclick="okFunction()">确认</button>
+                    <button id="noBtn" class="btn" onclick="noFunction()">取消</button>
+                </div>
             </div>
             <div class="modal-footer">
             </div>
@@ -181,6 +214,7 @@
     // define a simple Node template
     myDiagram.nodeTemplate =
         GO(go.Node, "Vertical",
+            new go.Binding("location", "loc", go.Point.parse),
             // the entire node will have a light-blue background
             {background: "#98d2e0"},
             GO(go.Picture,
@@ -199,12 +233,16 @@
         );
     myDiagram.linkTemplate =
         GO(go.Link,
-          GO(go.Shape),
-          GO(go.TextBlock, { segmentIndex: 0, segmentOffset: new go.Point(NaN, NaN),
-                           segmentOrientation: go.Link.OrientUpright }, new go.Binding("text", "fromPort")),
-          GO(go.TextBlock, { segmentIndex: -1, segmentOffset: new go.Point(NaN, NaN),
-                           segmentOrientation: go.Link.OrientUpright }, new go.Binding("text", "toPort"))
-         );
+            GO(go.Shape),
+            GO(go.TextBlock, {
+                segmentIndex: 0, segmentOffset: new go.Point(NaN, NaN),
+                segmentOrientation: go.Link.OrientUpright
+            }, new go.Binding("text", "fromPort")),
+            GO(go.TextBlock, {
+                segmentIndex: -1, segmentOffset: new go.Point(NaN, NaN),
+                segmentOrientation: go.Link.OrientUpright
+            }, new go.Binding("text", "toPort"))
+        );
     var model = GO(go.GraphLinksModel);
     model.nodeDataArray = [
         //{key: "RouterA", name: "RouterA", ports: [], source: "../static/router.png" },
@@ -263,7 +301,7 @@
                 + "<td class='portName'>" + portName + "</td>"
                 + "<td class='portIP'>" + portIP + "</td>"
                 + "<td class='portStatus'>" + portStatus + "</td>"
-                + "<td><button class='confPortBtn' onclick='confPort(\"" + trID + "\")'>配置</button></td>"
+                + "<td><button class='confPortBtn btn' onclick='confPort(\"" + trID + "\")'>配置</button></td>"
                 + "</tr>"
         }
         $("#routerID").html(routerName)
@@ -420,17 +458,24 @@
                     let info = data.routerInfo[i];
                     let name = info.name;
                     let ports = info.ports;
-                    let x = 0;
-                    let y = 0;
-                    if(i == 1) {
-                        x = 400;
-                        y = 0;
-                    }
-                    if(i == 2){
-                        x = 400;
-                        y = 400;
-                    }
-                    newData = {key: name, name: name, ports: ports, source: "../static/router.png", loc: x+" "+y}
+                    if (i == 0)
+                        newData = {
+                            key: name,
+                            name: name,
+                            ports: ports,
+                            source: "../static/router.png",
+                            loc: "-200 -200"
+                        };
+                    if (i == 1)
+                        newData = {
+                            key: name,
+                            name: name,
+                            ports: ports,
+                            source: "../static/router.png",
+                            loc: "200 -200"
+                        };
+                    if (i == 2)
+                        newData = {key: name, name: name, ports: ports, source: "../static/router.png", loc: "0 200"};
                     myDiagram.model.addNodeData(newData)
                 }
 
@@ -467,7 +512,7 @@
             data: {content: content},
             success: function (data) {
                 var res = ""
-                for(let key in data){
+                for (let key in data) {
                     res += key + ": " + data[key] + "\n";
                 }
                 alert(res);
@@ -517,7 +562,7 @@
     }
 
     // 功能：将文本域内容保存为本地文件
-    function saveConf(){
+    function saveConf() {
         var file = $("#file").val();
         var filename = getFileName(file);
         var text = $("#fileContent").val();

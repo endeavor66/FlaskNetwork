@@ -29,12 +29,12 @@ html, body, section {
 
 #fileContent {
     width: 99%;
-    height: 91%;
+    height: 85%;
 }
 
 #detailInfo {
     width: 99%;
-    height: 92%;
+    height: 91%;
 }
 
 /* 模态框样式 */
@@ -60,7 +60,7 @@ html, body, section {
     margin: auto;
     padding: 0;
     border: 1px solid #888;
-    width: 80%;
+    width: 21%;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     -webkit-animation-name: animatetop;
     -webkit-animation-duration: 0.4s;
@@ -114,11 +114,21 @@ html, body, section {
 
 .modal-body {
     padding: 2px 16px;
+    display: inline-block;
+}
+
+.modal-label{
+    display: inline-block;
+    width: 95px;
+    text-align: right;
+    margin-right: 5px;
 }
 
 .modal-footer {
     padding: 2px 16px;
-    background-color: #5cb85c;
+    background-color: #b4e8f6;
     color: white;
 }
+
+
 
