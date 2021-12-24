@@ -55,6 +55,7 @@ class TelnetClient:
             self.input(cmd)
         res = self.get_output()
         # res 裁剪首尾行（首行：输入的命令；尾行：输入提示符）
+        res = '\n'.join(res.split('\n')[1:-1])
         print("===================")
         print(res)
         print("===================")
