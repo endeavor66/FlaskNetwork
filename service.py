@@ -191,7 +191,8 @@ def getRouterTC(tc_dic, content):
         password = value['password']
         # 登录路由器
         tc = TC(ip, password)
-        tc.login()
+        while tc.login() == False:
+            print('重连中')
         tc_dic[key] = tc
 
 '''
@@ -310,9 +311,11 @@ def verifyTopology(tc_dic, content):
         exp_output = value['output']
         tc = tc_dic.get(router)
 
-        print('expected output\n-------------', exp_output)
-        print('real output\n------------')
+        print('expected output\n', exp_output)
+        print('real output\n')
         real_output = tc.exec_cmd(input)
+        # res 裁剪首尾行（首行：输入的命令；尾行：输入提示符）
+        res = '\n'.join(res.split('\n')[1:-1])
         if exp_output == real_output:
             print(router, key, ' pass!')
             res[key] = 'pass'

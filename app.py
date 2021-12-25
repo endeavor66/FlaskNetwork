@@ -139,6 +139,8 @@ def execute():
     # 路由器执行命令，返回结果
     tc = tc_dic.get(routerName)
     res = tc.exec_cmd(cmd)
+    # res 裁剪首尾行（首行：输入的命令；尾行：输入提示符）
+    res = '\n'.join(res.split('\n')[1:-1])
     return res
 
 '''
@@ -149,8 +151,8 @@ def execute():
 @app.route("/topologyTest", methods=('GET', 'POST'))
 def topologyTest():
     content = request.form['content']
-    # res = verifyTopology(tc_dic, content)
-    res = {'case1': 'pass', 'case2': 'pass','case3': 'fail','case4': 'pass'}
+    res = verifyTopology(tc_dic, content)
+    # res = {'case1': 'pass', 'case2': 'pass','case3': 'fail','case4': 'pass'}
     return res
 
 '''
@@ -175,8 +177,7 @@ def updatePort():
 @app.route("/clear", methods=['GET'])
 def clearConf():
     global conf_content
-    print('receiver')
-    print(conf_content)
+    # print(conf_content)
     clearConfiguration(tc_dic, conf_content)
     return 'success'
 
