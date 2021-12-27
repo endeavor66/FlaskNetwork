@@ -15186,11 +15186,11 @@
         fg = new E(R, "CycleNotUndirected", 13), $f = new E(R, "CycleDestinationTree", 14),
         bg = new E(R, "CycleSourceTree", 15), ki = new E(R, "DocumentScroll", 1), mi = new E(R, "InfiniteScroll", 2),
         Gi = new E(R, "TreeParentCollapsed", 21), Yk = new E(R, "AllParentsCollapsed", 22), Zk = new E(R,
-        "AnyParentsCollapsed", 23), $k = new H, al = "2.1.53", Uk = "image", Wk = !1, bl = null, Di = !1;
+            "AnyParentsCollapsed", 23), $k = new H, al = "2.1.53", Uk = "image", Wk = !1, bl = null, Di = !1;
 
     function Ei() {
         if (gh) {
-            bl = qa.document.createElement("canvas");
+            bl = qa.document.createElement("canvas")
         }
     }
 
@@ -29488,7 +29488,7 @@
         pn = new E(S, "OrientAlong", 21), hn = new E(S, "OrientPlus90", 22), kn = new E(S, "OrientMinus90", 23),
         Ep = new E(S, "OrientOpposite", 24), qn = new E(S, "OrientUpright", 25),
         jn = new E(S, "OrientPlus90Upright", 26), ln = new E(S, "OrientMinus90Upright",
-        27), mn = new E(S, "OrientUpright45", 28), Up = 16, Tp = 14, Vp = 8;
+            27), mn = new E(S, "OrientUpright45", 28), Up = 16, Tp = 14, Vp = 8;
     S.className = "Link";
     S.Normal = Ap;
     S.Orthogonal = iq;
