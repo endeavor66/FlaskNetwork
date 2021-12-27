@@ -554,6 +554,8 @@
                 alert('clear success')
                 myDiagram.clear()
                 console.log(myDiagram.model.nodeDataArray.length)
+                // 清空文本域内容
+                $("#fileContent").val()
             },
             error: function () {
                 alert("error")

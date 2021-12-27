@@ -1,6 +1,7 @@
 import yaml
 import json
 import ipaddress
+import re
 from myTelnetClient import TelnetClient as TC
 
 '''
@@ -314,14 +315,127 @@ def verifyTopology(tc_dic, content):
         print('expected output\n', exp_output)
         print('real output\n')
         real_output = tc.exec_cmd(input)
-        # res 裁剪首尾行（首行：输入的命令；尾行：输入提示符）
-        real_output = '\n'.join(real_output.split('\n')[1:-1])
-        if exp_output == real_output:
+        flag = verifyResult(input, exp_output, real_output)
+        if flag:
             print(router, key, ' pass!')
             res[key] = 'pass'
         else:
             print(router, key, ' fail!')
             res[key] = 'fail'
+    return res
+
+'''
+功能：根据不同的cmd，采用不同的信息提取策略；并比较 expect, real 提取后的信息是否一致
+'''
+def verifyResult(cmd, expect, real):
+    if cmd.startswith('show ip route'):
+        s_expect = extract_route(expect)
+        s_real = extract_route(real)
+    elif cmd.startswith == 'ping':
+        s_expect = extract_ping(expect)
+        s_real = extract_ping(real)
+    elif cmd.startswith("show ip ospf database"):
+        s_expect = extract_LSA(expect)
+        s_real = extract_LSA(real)
+    return s_expect == s_real
+
+
+'''
+注意路由次序问题
+例子：
+== 提取前 ==
+     10.0.0.0/24 is subnetted, 1 subnets
+C       10.0.0.0 is directly connected, FastEthernet0/0
+C    192.168.1.0/24 is directly connected, Serial0/0/0
+R    192.168.2.0/24 [120/1] via 192.168.1.1, 00:00:07, Serial0/0/0
+                    [120/1] via 10.0.0.2, 00:00:25, FastEthernet0/0
+R    192.168.3.0/24 [120/1] via 192.168.1.1, 00:00:07, Serial0/0/0
+
+== 提取后 ==
+C    10.0.0.0/24
+C    192.168.1.0/24
+R    192.168.2.0/24
+R    192.168.3.0/24
+'''
+def extract_route(info):
+    pattern = re.compile(r'((C|S|R|O IA)\s+\d+\.\d+\.\d+\.\d+)')
+    res = [p[0] for p in pattern.findall(info)]
+    res.sort()
+    return res
+
+
+'''
+例子：
+== 提取前 ==
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 21/28/31 ms
+
+== 提取后 ==
+Success rate is 100 percent
+
+== 说明 ==
+ping通：Success rate is 100 percent
+ping不通：Success rate is 0 percent
+'''
+def extract_ping(info):
+    searchObj = re.search(r'Success rate is \d* percent', info)
+    if searchObj:
+        return searchObj.group()
+    else:
+        return None
+
+'''
+例子：
+== 提取前 ==
+            OSPF Router with ID (192.168.4.1) (Process ID 1)
+
+                Router Link States (Area 0)
+
+Link ID         ADV Router      Age         Seq#       Checksum Link count
+192.168.4.1     192.168.4.1     90          0x80000003 0x0069e6 2
+172.16.3.1      172.16.3.1      90          0x80000003 0x008a72 2
+
+                Summary Net Link States (Area 0)
+Link ID         ADV Router      Age         Seq#       Checksum
+172.16.1.1      172.16.3.1      96          0x80000001 0x004b93
+172.16.2.1      172.16.3.1      96          0x80000002 0x003e9e
+172.16.3.1      172.16.3.1      96          0x80000003 0x0031a9
+192.168.4.0     192.168.4.1     51          0x80000001 0x0087fa
+
+                Router Link States (Area 51)
+
+Link ID         ADV Router      Age         Seq#       Checksum Link count
+192.168.4.1     192.168.4.1     56          0x80000002 0x000297 1
+172.24.2.1      172.24.2.1      56          0x80000002 0x0036b0 1
+
+                Net Link States (Area 51)
+Link ID         ADV Router      Age         Seq#       Checksum
+192.168.4.1     192.168.4.1     56          0x80000001 0x006c62
+
+                Summary Net Link States (Area 51)
+Link ID         ADV Router      Age         Seq#       Checksum
+192.168.1.0     192.168.4.1     51          0x80000001 0x002125
+172.16.1.1      192.168.4.1     51          0x80000002 0x004ba4
+172.16.2.1      192.168.4.1     51          0x80000003 0x003eaf
+172.16.3.1      192.168.4.1     51          0x80000004 0x0031ba
+
+== 提取后 ==
+Router Link States
+Net Link States
+Summary Net Link States
+
+== 说明 ==
+LSA-1: Router Link States
+LSA-2: Net Link States
+LSA-3: Summary Net Link States
+'''
+def extract_LSA(info):
+    pattern = re.compile(r'Router Link States \(Area \w+\)|Summary Net Link States \(Area \w+\)|Net Link States \(Area \w+\)')
+    res = pattern.findall(info)
+    res.sort()
     return res
 
 # filePath = 'static/conf.yml'

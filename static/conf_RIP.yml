@@ -3,6 +3,7 @@ RouterA:
   password: CISCO
   port:
     - s0/0/0: 192.168.1.2/24
+    - f0/0: 172.16.0.1/24
     - f0/1: 10.0.0.1/24
   command:
     - router rip
@@ -19,6 +20,7 @@ RouterB:
   port:
     - s0/0/0: 192.168.1.1/24
     - s0/0/1: 192.168.2.1/24
+    - f0/0: 172.16.0.2/24
   command:
     - router rip
     - network 192.168.1.0
@@ -32,6 +34,7 @@ RouterC:
   password: CISCO
   port:
     - s0/0/1: 192.168.2.2/24
+    - f0/0: 172.16.0.3/24
     - f0/1: 10.0.0.2/24
   command:
     - router rip
