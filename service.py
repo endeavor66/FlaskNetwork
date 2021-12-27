@@ -315,7 +315,7 @@ def verifyTopology(tc_dic, content):
         print('real output\n')
         real_output = tc.exec_cmd(input)
         # res 裁剪首尾行（首行：输入的命令；尾行：输入提示符）
-        res = '\n'.join(res.split('\n')[1:-1])
+        real_output = '\n'.join(real_output.split('\n')[1:-1])
         if exp_output == real_output:
             print(router, key, ' pass!')
             res[key] = 'pass'
