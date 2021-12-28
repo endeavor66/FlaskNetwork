@@ -2,6 +2,7 @@ import yaml
 import json
 import ipaddress
 import re
+import time
 from myTelnetClient import TelnetClient as TC
 
 '''
@@ -196,6 +197,7 @@ def getRouterTC(tc_dic, content):
         tc = TC(ip, password)
         while tc.login() == False:
             print('重连中')
+            time.sleep(5)
         tc_dic[key] = tc
 
 '''
@@ -333,7 +335,7 @@ def verifyResult(cmd, expect, real):
     if cmd.startswith('show ip route'):
         s_expect = extract_route(expect)
         s_real = extract_route(real)
-    elif cmd.startswith == 'ping':
+    elif cmd.startswith('ping'):
         s_expect = extract_ping(expect)
         s_real = extract_ping(real)
     elif cmd.startswith("show ip ospf database"):

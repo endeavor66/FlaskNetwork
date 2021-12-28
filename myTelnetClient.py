@@ -51,7 +51,10 @@ class TelnetClient:
         try:
             self.input(cmd)
         except:
-            self.login()
+            while tc.login() == False:
+                print('重连中')
+                time.sleep(5)
+
             self.input(cmd)
         res = self.get_output()
         # print("===================")
