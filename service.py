@@ -118,6 +118,8 @@ def getConnectionInfo(routerInfo):
         portsInfo = r["ports"]
         for p in portsInfo:
             portName = p["name"]
+            if portName == "f0/0":
+                continue
             if portName.startswith("s") or portName.startswith("f"):
                 portNet = p["net"]
                 # 未配置的端口直接跳过

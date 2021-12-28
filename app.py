@@ -120,9 +120,9 @@ def send():
     print(routerInfo)
     print(connection)
     # 获取每个路由器的Telnet客户端
-    getRouterTC(tc_dic, conf_content)
+    # getRouterTC(tc_dic, conf_content)
     # 根据conf_content内容搭建网络拓扑
-    buildTopology(tc_dic, conf_content)
+    # buildTopology(tc_dic, conf_content)
     return jsonify({"routerInfo": routerInfo, "connection": connection})
 
 '''
