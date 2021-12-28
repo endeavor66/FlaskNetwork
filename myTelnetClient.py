@@ -1,6 +1,5 @@
 import telnetlib
 import time
-import threading
 
 
 class TelnetClient:
@@ -19,16 +18,15 @@ class TelnetClient:
     def login(self):
         try:
             self.tn.open(self.host_ip)
-        except:
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
             print('连接失败')
             return False
-        # self.tn.read_until(b'login: ')
-        # self.input(username)
         self.tn.read_until(b'Password: ')
         self.input(self.password)
         login_result = self.get_output()
         print(login_result)
-        # self.tn.read_until(b'Router> ')
         self.input('en')
         self.tn.read_until(b'Password: ')
         self.input(self.password)
@@ -38,10 +36,6 @@ class TelnetClient:
             print('用户名或密码错误')
             return False
         print('登陆成功')
-        # 持久化连接终端
-        # t1 = threading.Thread(target=self.tn.interact, args=())
-        # t1.setDaemon(True)
-        # t1.start()
         return True
 
     def logout(self):
@@ -50,16 +44,11 @@ class TelnetClient:
     def exec_cmd(self, cmd):
         try:
             self.input(cmd)
-        except:
-            while tc.login() == False:
-                print('重连中')
-                time.sleep(5)
-
-            self.input(cmd)
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
         res = self.get_output()
-        # print("===================")
         print(res)
-        # print("===================")
         return res
 
     def setPortIp(self, portName, portIP, netmask):
@@ -72,8 +61,3 @@ class TelnetClient:
         self.exec_cmd('no shutdown')
 
 
-if __name__ == '__main__':
-    tc = TelnetClient('172.16.0.2', 'CISCO')
-    tc.login()
-    tc.exec_cmd('show running-config')
-    tc.logout()

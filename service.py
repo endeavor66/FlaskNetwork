@@ -195,9 +195,10 @@ def getRouterTC(tc_dic, content):
         password = value['password']
         # 登录路由器
         tc = TC(ip, password)
-        while tc.login() == False:
-            print('重连中')
-            time.sleep(5)
+        tc.login()
+        # while tc.login() == False:
+        #     print('重连中')
+        #     time.sleep(5)
         tc_dic[key] = tc
 
 '''
