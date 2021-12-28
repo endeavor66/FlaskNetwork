@@ -75,8 +75,7 @@ routerInfo = [
     }
 ]
 '''
-def getRouterInfo(content):
-    data = yaml.load(content, Loader=yaml.SafeLoader)
+def getRouterInfo(data):
     routerInfo = []
     for key, value in data.items():
         rName = key
@@ -188,8 +187,7 @@ def getPort(routerInfo, router, con):
 '''
 功能：获取每个路由器的telnet客户端，信息保存在 tc_dic
 '''
-def getRouterTC(tc_dic, content):
-    confInfo = yaml.load(content, Loader=yaml.SafeLoader)
+def getRouterTC(tc_dic, confInfo):
     for key, value in confInfo.items():
         ip = value['ip']
         password = value['password']
@@ -217,8 +215,7 @@ def getPortIpAndNetmask(portIPNet):
 输入：路由器的tc客户端(tc_dic)，配置文件内容(content)
 输出：拓扑搭建结果
 '''
-def buildTopology(tc_dic, content):
-    confInfo = yaml.load(content, Loader=yaml.SafeLoader)
+def buildTopology(tc_dic, confInfo):
     for key, value in confInfo.items():
         print(key)
         ports = value['port']
@@ -248,19 +245,30 @@ def buildTopology(tc_dic, content):
 输入：tc, portInfo = {'router': 'RouterA', 'portName': 's0/0/0', 'portIPNet': '172.16.1.1/24', 'status': 'up'}
 输出：更新结果(True|False)
 '''
-def updatePortInfo(tc, portInfo):
+def updatePortInfo(tc, portInfo, confInfo):
+    router = portInfo['router']
     portName = portInfo['portName']
     portIP, netmask = getPortIpAndNetmask(portInfo['portIP'])
     status = portInfo['status']
     net = cal_portNetIp(portInfo['portIP'])
     portInfo['portNet'] = net
 
+    # 更新路由器端口
     tc.exec_cmd('conf t')
     if status == 'down':
         tc.exec_cmd('int %s' % portName)
         tc.exec_cmd('shutdown')
     else:
         tc.setPortIp(portName, portIP, netmask)
+
+    # 更新配置文件
+    pInfo = confInfo['RouterA']['port']
+    idx = -1;
+    for i in range(len(pInfo)):
+        if list(pInfo[i].keys())[0] == portName:
+            idx = i
+            break
+    confInfo['RouterA']['port'][idx][portName] = portInfo['portIP']
 
     return portInfo
 
@@ -269,8 +277,7 @@ def updatePortInfo(tc, portInfo):
 输入：路由器的tc客户端(tc_dic)，配置文件内容(content)
 输出：配置结果
 '''
-def clearConfiguration(tc_dic, content):
-    confInfo = yaml.load(content, Loader=yaml.SafeLoader)
+def clearConfiguration(tc_dic, confInfo):
     for key, value in confInfo.items():
         print(key)
         ports = value['port']

@@ -1,4 +1,4 @@
-import json
+import yaml
 from flask import Flask, render_template, redirect, abort, request, jsonify
 from service import getRouterInfo, getConnectionInfo, getRouterTC, buildTopology, updatePortInfo, clearConfiguration, verifyTopology
 from myTelnetClient import TelnetClient as TC
@@ -112,7 +112,7 @@ def file_read():
 @app.route("/send", methods=('GET', 'POST'))
 def send():
     global conf_content
-    conf_content = request.form['content']
+    conf_content = yaml.load(request.form['content'], Loader=yaml.SafeLoader)
     # 获取路由器端口信息，格式见 routerInfo
     routerInfo = getRouterInfo(conf_content)
     # 识别网络拓扑关系，格式见 connection
@@ -120,9 +120,9 @@ def send():
     print(routerInfo)
     print(connection)
     # 获取每个路由器的Telnet客户端
-    getRouterTC(tc_dic, conf_content)
+    # getRouterTC(tc_dic, conf_content)
     # 根据conf_content内容搭建网络拓扑
-    buildTopology(tc_dic, conf_content)
+    # buildTopology(tc_dic, conf_content)
     return jsonify({"routerInfo": routerInfo, "connection": connection})
 
 '''
@@ -162,12 +162,13 @@ def topologyTest():
 '''
 @app.route("/update", methods=('GET', 'POST'))
 def updatePort():
-    # portInfo = {'router': 'RouterA', 'portName': 's0/0/0', 'portIPNet': '172.16.1.1/24', 'status': 'up'}
+    # portInfo = {'router': 'RouterA', 'portName': 's0/0/0', 'portIP': '172.16.1.1/24', 'status': 'up'}
+    global conf_content
     portInfo = dict(request.form)
     router = portInfo['router']
     tc = tc_dic[router]
-    newPortInfo = updatePortInfo(tc, portInfo)
-    return newPortInfo
+    newPortInfo = updatePortInfo(tc, portInfo, conf_content)
+    return jsonify({"newPortInfo": newPortInfo, "conf_content": yaml.dump(conf_content)})
 
 '''
 功能：一键清空当前配置
@@ -177,7 +178,6 @@ def updatePort():
 @app.route("/clear", methods=['GET'])
 def clearConf():
     global conf_content
-    # print(conf_content)
     clearConfiguration(tc_dic, conf_content)
     return 'success'
 

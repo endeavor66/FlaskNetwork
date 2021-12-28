@@ -355,8 +355,10 @@
             type: "POST",
             url: "/update",
             data: {router: router, portName: portName, portIP: portIP, status: portStatus},
-            success: function (data) {
+            success: function (allData) {
                 // 修改前端中路由器端口信息
+                var data = allData['newPortInfo']
+                var confData = allData['conf_content']
                 var adata = myDiagram.model.findNodeDataForKey(data['router']);
                 for (let i = 0; i < adata.ports.length; i++) {
                     console.log(adata.ports[i].name)
@@ -367,6 +369,8 @@
                         break;
                     }
                 }
+                // 更新文本域内容
+                $("#fileContent").val(confData)
                 alert('success')
             },
             error: function () {
