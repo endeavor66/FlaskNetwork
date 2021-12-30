@@ -271,7 +271,10 @@ def updatePortInfo(tc, portInfo, confInfo):
         if list(pInfo[i].keys())[0] == portName:
             idx = i
             break
-    confInfo[router]['port'][idx][portName] = portInfo['portIP']
+    if idx == -1:
+        confInfo[router]['port'].append({portName: portInfo['portIP']})
+    else:
+        confInfo[router]['port'][idx][portName] = portInfo['portIP']
 
     tc.logout()
 

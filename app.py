@@ -1,7 +1,6 @@
 import yaml
-from flask import Flask, render_template, redirect, abort, request, jsonify
+from flask import Flask, render_template, request, jsonify
 from service import getRouterInfo, getConnectionInfo, getRouterTC, buildTopology, updatePortInfo, clearConfiguration, verifyTopology, closeRouter
-from myTelnetClient import TelnetClient as TC
 
 app = Flask(__name__)
 
@@ -123,7 +122,7 @@ def send():
     # 获取每个路由器的Telnet客户端
     getRouterTC(tc_dic, conf_content)
     # 根据conf_content内容搭建网络拓扑
-    # buildTopology(tc_dic, conf_content)
+    buildTopology(tc_dic, conf_content)
     return jsonify({"routerInfo": routerInfo, "connection": connection})
 
 '''
