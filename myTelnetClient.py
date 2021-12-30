@@ -41,23 +41,37 @@ class TelnetClient:
     def logout(self):
         self.input('exit')
 
-    def exec_cmd(self, cmd):
+    def exec_cmd_without_login_logout(self, cmd):
         try:
             self.input(cmd)
         except Exception as e:
             import traceback
             traceback.print_exc()
+            return
         res = self.get_output()
         print(res)
         return res
 
+    def exec_cmd(self, cmd):
+        try:
+            self.login()
+            self.input(cmd)
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return
+        res = self.get_output()
+        self.logout()
+        print(res)
+        return res
+
     def setPortIp(self, portName, portIP, netmask):
-        self.exec_cmd('conf t')
-        self.exec_cmd('int %s' % portName)
-        self.exec_cmd('ip address %s %s' % (portIP, netmask))
+        self.exec_cmd_without_login_logout('conf t')
+        self.exec_cmd_without_login_logout('int %s' % portName)
+        self.exec_cmd_without_login_logout('ip address %s %s' % (portIP, netmask))
         # 如果是串口，还需要设置时钟
         if portName[0].upper() == 'S':
-            self.exec_cmd('clock rate 128000')
-        self.exec_cmd('no shutdown')
+            self.exec_cmd_without_login_logout('clock rate 128000')
+        self.exec_cmd_without_login_logout('no shutdown')
 
 

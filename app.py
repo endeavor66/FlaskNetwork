@@ -1,6 +1,6 @@
 import yaml
 from flask import Flask, render_template, redirect, abort, request, jsonify
-from service import getRouterInfo, getConnectionInfo, getRouterTC, buildTopology, updatePortInfo, clearConfiguration, verifyTopology
+from service import getRouterInfo, getConnectionInfo, getRouterTC, buildTopology, updatePortInfo, clearConfiguration, verifyTopology, closeRouter
 from myTelnetClient import TelnetClient as TC
 
 app = Flask(__name__)
@@ -111,6 +111,7 @@ def file_read():
 '''
 @app.route("/send", methods=('GET', 'POST'))
 def send():
+    global tc_dic
     global conf_content
     conf_content = yaml.load(request.form['content'], Loader=yaml.SafeLoader)
     # 获取路由器端口信息，格式见 routerInfo
@@ -120,7 +121,7 @@ def send():
     print(routerInfo)
     print(connection)
     # 获取每个路由器的Telnet客户端
-    # getRouterTC(tc_dic, conf_content)
+    getRouterTC(tc_dic, conf_content)
     # 根据conf_content内容搭建网络拓扑
     # buildTopology(tc_dic, conf_content)
     return jsonify({"routerInfo": routerInfo, "connection": connection})
@@ -132,6 +133,7 @@ def send():
 '''
 @app.route("/execute", methods=('GET', 'POST'))
 def execute():
+    global tc_dic
     routerName = request.form['router']
     cmd = request.form['command']
     print(routerName)
@@ -150,6 +152,7 @@ def execute():
 '''
 @app.route("/topologyTest", methods=('GET', 'POST'))
 def topologyTest():
+    global tc_dic
     content = request.form['content']
     res = verifyTopology(tc_dic, content)
     # res = {'case1': 'pass', 'case2': 'pass','case3': 'fail','case4': 'pass'}
@@ -162,6 +165,7 @@ def topologyTest():
 '''
 @app.route("/update", methods=('GET', 'POST'))
 def updatePort():
+    global tc_dic
     # portInfo = {'router': 'RouterA', 'portName': 's0/0/0', 'portIP': '172.16.1.1/24', 'status': 'up'}
     global conf_content
     portInfo = dict(request.form)
@@ -177,6 +181,7 @@ def updatePort():
 '''
 @app.route("/clear", methods=['GET'])
 def clearConf():
+    global tc_dic
     global conf_content
     clearConfiguration(tc_dic, conf_content)
     return 'success'

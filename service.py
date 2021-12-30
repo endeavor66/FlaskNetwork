@@ -193,7 +193,6 @@ def getRouterTC(tc_dic, confInfo):
         password = value['password']
         # 登录路由器
         tc = TC(ip, password)
-        tc.login()
         # while tc.login() == False:
         #     print('重连中')
         #     time.sleep(5)
@@ -223,7 +222,8 @@ def buildTopology(tc_dic, confInfo):
 
         # 设置路由器各个端口Ip
         tc = tc_dic[key]
-        tc.exec_cmd('conf t')
+        tc.login()
+        tc.exec_cmd_without_login_logout('conf t')
         for p in ports:
             portName = list(p.keys())[0]
             portIPNet = p[portName]
@@ -233,12 +233,14 @@ def buildTopology(tc_dic, confInfo):
             tc.setPortIp(portName, portIP, netmask)
         # 执行命令
         for c in commands:
-            tc.exec_cmd(c)
+            tc.exec_cmd_without_login_logout(c)
 
         # 查看配置信息
-        tc.exec_cmd('end')
-        tc.exec_cmd('show ip route')
+        tc.exec_cmd_without_login_logout('end')
+        tc.exec_cmd_without_login_logout('show ip route')
         print(key, ' conf success!')
+        tc.logout()
+
 
 '''
 功能：更新路由器端口信息
@@ -254,21 +256,24 @@ def updatePortInfo(tc, portInfo, confInfo):
     portInfo['portNet'] = net
 
     # 更新路由器端口
-    tc.exec_cmd('conf t')
+    tc.login()
+    tc.exec_cmd_without_login_logout('conf t')
     if status == 'down':
-        tc.exec_cmd('int %s' % portName)
-        tc.exec_cmd('shutdown')
+        tc.exec_cmd_without_login_logout('int %s' % portName)
+        tc.exec_cmd_without_login_logout('shutdown')
     else:
         tc.setPortIp(portName, portIP, netmask)
 
     # 更新配置文件
-    pInfo = confInfo['RouterA']['port']
+    pInfo = confInfo[router]['port']
     idx = -1;
     for i in range(len(pInfo)):
         if list(pInfo[i].keys())[0] == portName:
             idx = i
             break
-    confInfo['RouterA']['port'][idx][portName] = portInfo['portIP']
+    confInfo[router]['port'][idx][portName] = portInfo['portIP']
+
+    tc.logout()
 
     return portInfo
 
@@ -285,7 +290,8 @@ def clearConfiguration(tc_dic, confInfo):
 
         # 清空路由器各个端口Ip，仅保留 f0/0，因为 telnet连接需要用到
         tc = tc_dic[key]
-        tc.exec_cmd('conf t')
+        tc.login()
+        tc.exec_cmd_without_login_logout('conf t')
         for p in ports:
             portName = list(p.keys())[0]
             # 保留 f0/0端口，因为 telnet是通过 f0/0与路由器建立链接
@@ -293,22 +299,23 @@ def clearConfiguration(tc_dic, confInfo):
                 continue
             # 对于环回端口，采用 no命令；对于其他端口，采用 default命令
             if portName[0].upper() == 'L':
-                tc.exec_cmd('no int %s' % portName)
+                tc.exec_cmd_without_login_logout('no int %s' % portName)
             else:
-                tc.exec_cmd('default int %s' % portName)
+                tc.exec_cmd_without_login_logout('default int %s' % portName)
 
         # 清空路由表
         for c in commands:
             if c.startswith('ip route'):
-                tc.exec_cmd('no %s' % c)
+                tc.exec_cmd_without_login_logout('no %s' % c)
             elif c == 'router rip' or c == 'router ospf 1':
-                tc.exec_cmd('no %s' % c)
+                tc.exec_cmd_without_login_logout('no %s' % c)
                 break
 
         # 查看配置信息
-        tc.exec_cmd('end')
-        tc.exec_cmd('show running-config')
+        tc.exec_cmd_without_login_logout('end')
+        tc.exec_cmd_without_login_logout('show running-config')
         print(key, ' clear success!')
+        tc.logout()
 
 '''
 功能：根据配置文件内容，测试拓扑的正确性
@@ -398,6 +405,10 @@ def extract_ping(info):
         return searchObj.group()
     else:
         return None
+
+def closeRouter(tc_dic):
+    for key, value in tc_dic.items():
+        tc_dic[key].logout()
 
 '''
 例子：
