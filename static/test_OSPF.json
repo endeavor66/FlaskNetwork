@@ -12,7 +12,7 @@
   "case3": {
     "router": "RouterC",
     "input": "show ip route ospf",
-    "output": "\n            OSPF Router with ID (172.24.2.1) (Process ID 1)\n\n\t\tRouter Link States (Area 51)\n\nLink ID         ADV Router      Age         Seq#       Checksum Link count\n172.24.2.1      172.24.2.1      444         0x80000002 0x00368E 1\n192.168.4.1     192.168.4.1     445         0x80000003 0x00FF76 1\n\n\t\tNet Link States (Area 51)\n\nLink ID         ADV Router      Age         Seq#       Checksum\n192.168.4.1     192.168.4.1     445         0x80000001 0x00F630\n\n\t\tSummary Net Link States (Area 51)\n\nLink ID         ADV Router      Age         Seq#       Checksum\n172.16.1.1      192.168.4.1     500         0x80000001 0x006896\n172.16.2.1      192.168.4.1     500         0x80000001 0x005DA0\n172.16.3.1      192.168.4.1     500         0x80000001 0x0052AA\n192.168.1.0     192.168.4.1     500         0x80000001 0x003C18"
+    "output": "     172.16.0.0/16 is variably subnetted, 4 subnets, 2 masks\nO IA    172.16.1.1/32 [110/783] via 192.168.4.1, 00:29:59, FastEthernet0/1\nO IA    172.16.3.1/32 [110/783] via 192.168.4.1, 00:29:59, FastEthernet0/1\nO IA    172.16.2.1/32 [110/783] via 192.168.4.1, 00:29:59, FastEthernet0/1\nO IA 192.168.1.0/24 [110/782] via 192.168.4.1, 00:29:59, FastEthernet0/1"
   },
   "case4": {
     "router": "RouterC",

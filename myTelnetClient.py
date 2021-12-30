@@ -43,6 +43,10 @@ class TelnetClient:
 
     def exec_cmd_without_login_logout(self, cmd):
         try:
+            if cmd == 'show ip ospf database':
+                self.input("terminal length 0")
+                login_result = self.get_output()
+                print(login_result)
             self.input(cmd)
         except Exception as e:
             import traceback
@@ -55,6 +59,10 @@ class TelnetClient:
     def exec_cmd(self, cmd):
         try:
             self.login()
+            if cmd == 'show ip ospf database':
+                self.input("terminal length 0")
+                login_result = self.get_output()
+                print(login_result)
             self.input(cmd)
         except Exception as e:
             import traceback
